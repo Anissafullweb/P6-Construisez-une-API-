@@ -1,12 +1,19 @@
+// Importation express, Helmet et mongoose
+
 const express = require ('express');
 const mongoose = require ('mongoose');
+
+//Importations des routes
 const usersRoutes = require ('./routes/users.js');
 const saucesRoutes = require('./routes/sauce.js');
+// Sécurisation API
+const helmet = require('helmet');
+app.use(helmet());
 
 
 
 
-/*  Accès au chemin Mongodb*/
+/*  Accès aux variables d'environnement*/
 const path = require ('path');
 require('dotenv').config();
 /*  Accès au chemin Mongodb*/
