@@ -12,7 +12,7 @@ const userSchema = mongoose.Schema({
     email: {type: String, required: true, unique: true}, 
     password: {type: String, required: true}
 });
-
+// UnqiueValidator evite que plusieurs utilisateurs s'inscrivent avec le même mail
 userSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model("User", userSchema);

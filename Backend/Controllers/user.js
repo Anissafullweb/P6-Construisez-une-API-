@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');// appel à la fonction de hachage de bcrypt da
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');// Se connecter et disposer d'un token valide.
 // Création des tokens d'authentification
+
 // Les JSON web tokens sont des tokens chiffrés qui peuvent être utilisés pour l'autorisation.
 
 // INSCRIPTION
@@ -17,22 +18,23 @@ exports.signup = (req, res, next) => {
         email: req.body.email, // l'adresse mail
         password: hash // le mot de passe haché
       });
-      user.save()
+      user.save()//Stockage dans la BDD Mongoose
         .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
         .catch(error => res.status(400).json({ error }));
     })
     .catch(error => res.status(500).json({ error }));
 };
 
-// CONNECTION
+// CONNECTION Fonction pour login utilisateur
 exports.login = (req, res, next) => {
   User.findOne({ email: req.body.email }) // on vérifie que l'adresse mail figure bien dan la base de données
       .then(user => {
-          if (!user) {
-              return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+       if (!user) {
+            return res.status(401).json({ error: 'Identifiant incorrect !' });
           }
-          bcrypt.compare(req.body.password, user.password) // on compare les mots de passes
+          bcrypt.compare(req.body.password, user.password) // on compare les mots de passes saisie par l'utilisateur et ce qu'il y a dans la base de données
               .then(valid => {
+             
                   if (!valid) {
                       return res.status(401).json({ error: 'Mot de passe incorrect !' });
                   }
@@ -41,7 +43,8 @@ exports.login = (req, res, next) => {
                       userId: user._id,
                       token: jwt.sign( // La méthode sign() du package jsonwebtoken utilise une clé secrète pour chiffrer un token qui peut contenir un payload personnalisé et avoir une validité limitée.
                           { userId: user._id },
-                          'RANDOM_TOKEN_SECRET',// Utilisation une chaîne secrète de développement temporaire RANDOM_SECRET_KEY pour crypter notre token 
+
+                          process.env.RANDOM_SECRET_TOKEN,// Utilisation une chaîne secrète de développement temporaire RANDOM_SECRET_KEY pour crypter notre token 
                           { expiresIn: '24h' }
                       )
                   });

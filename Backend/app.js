@@ -1,27 +1,26 @@
 const express = require ('express');
 const mongoose = require ('mongoose');
+const usersRoutes = require ('./routes/users.js');
+const saucesRoutes = require('./routes/sauce.js');
+
+
+
 
 /*  Accès au chemin Mongodb*/
 const path = require ('path');
 require('dotenv').config();
 /*  Accès au chemin Mongodb*/
 
-mongoose.connect('mongodb+srv://Piiquante:nOHwbjwRmBbAsGH4@cluster0.k0krtfi.mongodb.net/?retryWrites=true&w=majority',
+mongoose.connect(process.env.DB_URL,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch(() => console.log('Connexion à MongoDB échouée !'));
+  .catch((error) => console.log('Connexion à MongoDB échouée !',error));
 
 const app = express();
+app.use(express.json());
 
-app.use((req, res, next) =>{
-    console.log('requête reçue !');
-    next();
-}
-)
-app.use((req, res) =>{
-    res.json({ message : 'votre reponse ok'})
-})
+
 /*Integration di modele CORS Ces headers permettent :
 
     d'accéder à notre API depuis n'importe quelle origine ( '*' ) ;
@@ -33,4 +32,7 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   next();
 });
+app.use("/api/sauces" ,saucesRoutes);
+app.use("/api/auth", usersRoutes);
+app.use("/images", express.static(path.join(__dirname, "Images")));
 module.exports = app;
