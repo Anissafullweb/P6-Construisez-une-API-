@@ -14,10 +14,10 @@ const  limiteur  =  rateLimit ( {
 	legacyHeaders : false ,  // Désactive les en-têtes `X-RateLimit-*` 
 } )
 // Apply the rate limiting middleware to all requests
-app.use(limiteur)
+//app.use(limiteur)
 
 // Appliquer le middleware de limitation de débit à toutes les requêtes 
-app . utilisation ( limiteur )
+//app .utilisation ( limiteur )
 //Importations des routes
 const usersRoutes = require ('./routes/users.js');
 const saucesRoutes = require('./routes/sauce.js');
@@ -50,7 +50,7 @@ app.use(express.json());
 // Headers pour éviter les erreurs de CORS
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
